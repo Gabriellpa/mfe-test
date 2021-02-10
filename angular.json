@@ -39,7 +39,7 @@
       "prefix": "myorg",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/apps/main",
             "index": "apps/main/src/index.html",
@@ -47,9 +47,15 @@
             "polyfills": "apps/main/src/polyfills.ts",
             "tsConfig": "apps/main/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/main/src/favicon.ico", "apps/main/src/assets"],
-            "styles": ["apps/main/src/styles.css"],
-            "scripts": []
+            "assets": [
+              "apps/main/src/favicon.ico",
+              "apps/main/src/assets"
+            ],
+            "styles": [
+              "apps/main/src/styles.css"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "apps/main/webpack.config.js"
           },
           "configurations": {
             "production": {
@@ -77,18 +83,22 @@
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
                 }
-              ]
+              ],
+              "extraWebpackConfig": "apps/main/webpack.prod.config.js"
             }
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
-            "browserTarget": "main:build"
+            "browserTarget": "main:build",
+            "extraWebpackConfig": "apps/main/webpack.config.js",
+            "port": 4200
           },
           "configurations": {
             "production": {
-              "browserTarget": "main:build:production"
+              "browserTarget": "main:build:production",
+              "extraWebpackConfig": "apps/main/webpack.prod.config.js"
             }
           }
         },
@@ -108,11 +118,14 @@
           }
         },
         "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/main"],
+          "builder": "ngx-build-plus:karma",
+          "outputs": [
+            "coverage/apps/main"
+          ],
           "options": {
             "jestConfig": "apps/main/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "extraWebpackConfig": "apps/main/webpack.config.js"
           }
         }
       }
@@ -138,7 +151,135 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/main-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/main-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
+    },
+    "menu": {
+      "projectType": "application",
+      "root": "apps/menu",
+      "sourceRoot": "apps/menu/src",
+      "prefix": "myorg",
+      "architect": {
+        "build": {
+          "builder": "ngx-build-plus:browser",
+          "options": {
+            "outputPath": "dist/apps/menu",
+            "index": "apps/menu/src/index.html",
+            "main": "apps/menu/src/main.ts",
+            "polyfills": "apps/menu/src/polyfills.ts",
+            "tsConfig": "apps/menu/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/menu/src/favicon.ico",
+              "apps/menu/src/assets"
+            ],
+            "styles": [
+              "apps/menu/src/styles.css"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "apps/menu/webpack.config.js"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/menu/src/environments/environment.ts",
+                  "with": "apps/menu/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "extraWebpackConfig": "apps/menu/webpack.prod.config.js"
+            }
+          }
+        },
+        "serve": {
+          "builder": "ngx-build-plus:dev-server",
+          "options": {
+            "browserTarget": "menu:build",
+            "extraWebpackConfig": "apps/menu/webpack.config.js",
+            "port": 4250
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "menu:build:production",
+              "extraWebpackConfig": "apps/menu/webpack.prod.config.js"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "menu:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/menu/src/**/*.ts",
+              "apps/menu/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "ngx-build-plus:karma",
+          "outputs": [
+            "coverage/apps/menu"
+          ],
+          "options": {
+            "jestConfig": "apps/menu/jest.config.js",
+            "passWithNoTests": true,
+            "extraWebpackConfig": "apps/menu/webpack.config.js"
+          }
+        }
+      }
+    },
+    "menu-e2e": {
+      "root": "apps/menu-e2e",
+      "sourceRoot": "apps/menu-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/menu-e2e/cypress.json",
+            "tsConfig": "apps/menu-e2e/tsconfig.e2e.json",
+            "devServerTarget": "menu:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "menu:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/menu-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }

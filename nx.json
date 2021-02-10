@@ -17,6 +17,8 @@
   },
   "projects": {
     "main": { "tags": [] },
-    "main-e2e": { "tags": [], "implicitDependencies": ["main"] }
+    "main-e2e": { "tags": [], "implicitDependencies": ["main"] },
+    "menu": { "tags": [] },
+    "menu-e2e": { "tags": [], "implicitDependencies": ["menu"] }
   }
 }
